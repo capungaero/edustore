@@ -1,28 +1,22 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Order from './pages/Order';
+import Laporan from './pages/Laporan';
+import Keuangan from './pages/Keuangan';
+import Konfigurasi from './pages/Konfigurasi';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/laporan" element={<Laporan />} />
+        <Route path="/keuangan" element={<Keuangan />} />
+        <Route path="/konfigurasi" element={<Konfigurasi />} />
+      </Routes>
+    </Router>
   );
 }
 

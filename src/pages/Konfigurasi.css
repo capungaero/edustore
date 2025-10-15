@@ -1,0 +1,24 @@
+.konfigurasi-container {
+  min-height: 100vh;
+  background: #f3f4f6;
+  padding: 2rem;
+}
+
+.konfigurasi-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.konfigurasi-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1f2937;
+  margin: 0;
+}
+
+.konfigurasi-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0 0;
+}

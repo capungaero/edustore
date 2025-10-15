@@ -317,6 +317,11 @@
   color: #6b7280;
 }
 
+.nama-pemesan {
+  font-weight: 600;
+  color: #1f2937;
+}
+
 .badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;

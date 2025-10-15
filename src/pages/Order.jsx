@@ -13,6 +13,7 @@ function Order() {
   const [instansiList, setInstansiList] = useState([]);
   
   const [formData, setFormData] = useState({
+    namaPemesan: '',
     instansi: '',
     pekerjaan: '',
     deadline: '',
@@ -126,6 +127,7 @@ function Order() {
 
     // Reset form
     setFormData({
+      namaPemesan: '',
       instansi: instansiList[0] || '',
       pekerjaan: jenisLista[0]?.nama || '',
       deadline: '',
@@ -186,6 +188,19 @@ function Order() {
             </div>
             <form onSubmit={handleSubmit} className="order-form">
               <div className="form-grid">
+                <div className="form-group">
+                  <label htmlFor="namaPemesan">Nama Pemesan</label>
+                  <input
+                    type="text"
+                    id="namaPemesan"
+                    name="namaPemesan"
+                    value={formData.namaPemesan}
+                    onChange={handleInputChange}
+                    placeholder="Masukkan nama pemesan..."
+                    required
+                  />
+                </div>
+
                 <div className="form-group">
                   <label htmlFor="instansi">Instansi</label>
                   <select
@@ -319,6 +334,7 @@ function Order() {
               <thead>
                 <tr>
                   <th>ID Pesanan</th>
+                  <th>Nama Pemesan</th>
                   <th>Instansi</th>
                   <th>Pekerjaan</th>
                   <th>Tgl Masuk</th>
@@ -335,6 +351,7 @@ function Order() {
                 {orders.map((order) => (
                   <tr key={order.id}>
                     <td className="order-id">{order.id}</td>
+                    <td className="nama-pemesan">{order.namaPemesan || '-'}</td>
                     <td><span className="instansi-badge">{order.instansi || '-'}</span></td>
                     <td>
                       <span className={`badge badge-${order.pekerjaan}`}>

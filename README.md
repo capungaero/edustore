@@ -1,70 +1,159 @@
-# GitHub Codespaces ♥️ React
+# 📦 Aplikasi Manajemen Order
 
-Welcome to your shiny new Codespace running React! We've got everything fired up and running for you to explore React.
+> Sistem Manajemen Pesanan Terintegrasi untuk bisnis percetakan dan jasa.
 
-You've got a blank canvas to work on from a git perspective as well. There's a single initial commit with the what you're seeing right now - where you go from here is up to you!
+![React](https://img.shields.io/badge/React-18.2.0-61dafb?logo=react)
+![Vite](https://img.shields.io/badge/Vite-6.3.6-646cff?logo=vite)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
+## ✨ Fitur Utama
 
-This project was bootstrapped for you with [Vite](https://vitejs.dev/).
+### 🛒 Modul Order
+- ✅ **Auto-generate ID Pesanan** dengan format unik
+- 📋 **Jenis Pekerjaan**: Fotocopy, Cetak, Print, Jilid
+- 📅 **Tanggal Masuk**: Otomatis terisi tanggal hari ini
+- ⏰ **Deadline**: Input tanggal dengan validasi
+- 📏 **Satuan**: Pcs, Lembar, Lembar Bolak Balik, Unit
+- 💰 **Harga & Total**: Kalkulasi otomatis
+- 📝 **Keterangan**: Catatan tambahan untuk pesanan
+- 💾 **Data Persistent**: Tersimpan di localStorage
 
-## Available Scripts
+### 📊 Modul Lainnya (Coming Soon)
+- 📈 Laporan & Statistik
+- 💸 Manajemen Keuangan
+- ⚙️ Konfigurasi Harga & Pengaturan
 
-In the project directory, you can run:
+## 🚀 Quick Start
 
-### `npm start`
+### Instalasi
 
-We've already run this for you in the `Codespaces: server` terminal window below. If you need to stop the server for any reason you can just run `npm start` again to bring it back online.
+```bash
+# Clone repository
+git clone https://github.com/USERNAME/manajemen-order.git
+cd manajemen-order
 
-Runs the app in the development mode.\
-Open [http://localhost:3000/](http://localhost:3000/) in the built-in Simple Browser (`Cmd/Ctrl + Shift + P > Simple Browser: Show`) to view your running application.
+# Install dependencies
+npm install
 
-The page will reload automatically when you make changes.\
-You may also see any lint errors in the console.
+# Jalankan development server
+npm start
+```
 
-### `npm test`
+Aplikasi akan berjalan di `http://localhost:3000`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🌐 Deploy ke GitHub Pages
 
-### `npm run build`
+### Metode Tercepat (Recommended)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Jalankan script interaktif:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+./quick-deploy.sh
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Pilih salah satu opsi:
+1. **GitHub CLI** - Otomatis setup repository dan deploy
+2. **Manual** - Setup repository manual dengan panduan
+3. **Deploy Only** - Jika repository sudah ada
 
-## Learn More
+### Atau Deploy Manual
 
-You can learn more in the [Vite documentation](https://vitejs.dev/guide/).
+```bash
+# 1. Build aplikasi
+npm run build
 
-To learn Vitest, a Vite-native testing framework, go to [Vitest documentation](https://vitest.dev/guide/)
+# 2. Deploy dengan gh-pages
+npm run deploy
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+📖 **Panduan Lengkap**: Lihat [DEPLOY-GUIDE.md](DEPLOY-GUIDE.md)
 
-### Code Splitting
+## 🛠️ Teknologi
 
-This section has moved here: [https://sambitsahoo.com/blog/vite-code-splitting-that-works.html](https://sambitsahoo.com/blog/vite-code-splitting-that-works.html)
+- **Frontend Framework**: React 18.2.0
+- **Routing**: React Router DOM 7.9.4
+- **Icons**: Lucide React
+- **Build Tool**: Vite 6.3.6
+- **Styling**: CSS3 Modern
+- **Deployment**: GitHub Actions + GitHub Pages
 
-### Analyzing the Bundle Size
+## 📁 Struktur Project
 
-This section has moved here: [https://github.com/btd/rollup-plugin-visualizer#rollup-plugin-visualizer](https://github.com/btd/rollup-plugin-visualizer#rollup-plugin-visualizer)
+```
+src/
+├── pages/
+│   ├── Home.jsx          # Halaman utama dengan navigasi
+│   ├── Order.jsx         # Modul order (lengkap)
+│   ├── Laporan.jsx       # Modul laporan
+│   ├── Keuangan.jsx      # Modul keuangan
+│   └── Konfigurasi.jsx   # Modul konfigurasi
+├── App.jsx               # Router utama
+└── index.jsx             # Entry point
+```
 
-### Making a Progressive Web App
+## 💻 Available Scripts
 
-This section has moved here: [https://dev.to/hamdankhan364/simplifying-progressive-web-app-pwa-development-with-vite-a-beginners-guide-38cf](https://dev.to/hamdankhan364/simplifying-progressive-web-app-pwa-development-with-vite-a-beginners-guide-38cf)
+```bash
+npm start      # Development server
+npm run build  # Production build
+npm run preview # Preview production build
+npm test       # Run tests
+npm run deploy # Deploy to GitHub Pages
+```
 
-### Advanced Configuration
+## 🎨 Fitur Desain
 
-This section has moved here: [https://vitejs.dev/guide/build.html#advanced-base-options](https://vitejs.dev/guide/build.html#advanced-base-options)
+- 🌈 Gradient background yang elegan
+- ✨ Animasi smooth pada hover
+- 📱 Responsive design untuk semua device
+- 🎭 Modal form yang modern
+- 📊 Tabel data profesional
+- 🎯 Icon menarik dari Lucide React
+- 🎨 Color-coded badges untuk kategori
 
-### Deployment
+## 📝 Cara Penggunaan
 
-This section has moved here: [https://vitejs.dev/guide/build.html](https://vitejs.dev/guide/build.html)
+1. **Halaman Utama**: Pilih modul dari 4 kartu yang tersedia
+2. **Modul Order**: 
+   - Klik tombol **"Tambah Order"**
+   - Isi form pesanan dengan lengkap
+   - Klik **"Simpan Order"**
+   - Data akan tersimpan dan ditampilkan dalam tabel
+   - Gunakan tombol hapus untuk menghapus pesanan
 
-### Troubleshooting
+## 💡 Default Konfigurasi Harga
 
-This section has moved here: [https://vitejs.dev/guide/troubleshooting.html](https://vitejs.dev/guide/troubleshooting.html)
+| Jenis Pekerjaan | Harga |
+|----------------|--------|
+| Fotocopy | Rp 500 |
+| Cetak | Rp 1.000 |
+| Print | Rp 1.500 |
+| Jilid | Rp 5.000 |
+
+*Harga dapat disesuaikan melalui modul Konfigurasi (coming soon)*
+
+## 🔮 Roadmap
+
+- [ ] Modul Laporan dengan grafik dan statistik
+- [ ] Modul Keuangan untuk tracking pembayaran
+- [ ] Modul Konfigurasi untuk pengaturan harga
+- [ ] Export data ke Excel/PDF
+- [ ] Notifikasi deadline pesanan
+- [ ] Multi-user support
+- [ ] Dark mode
+
+## 🐛 Bug Reports & Feature Requests
+
+Silakan buat [issue baru](https://github.com/USERNAME/manajemen-order/issues) untuk melaporkan bug atau request fitur.
+
+## 📄 License
+
+MIT License - bebas digunakan untuk keperluan komersial maupun personal.
+
+## 👨‍💻 Developer
+
+Dibuat dengan ❤️ menggunakan React dan Vite
+
+---
+
+**⭐ Jangan lupa beri star jika project ini bermanfaat!**

@@ -326,6 +326,17 @@
   text-transform: capitalize;
 }
 
+.instansi-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: #e0e7ff;
+  color: #3730a3;
+  text-transform: uppercase;
+}
+
 .badge-fotocopy {
   background: #dbeafe;
   color: #1e40af;

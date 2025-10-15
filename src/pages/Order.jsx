@@ -8,30 +8,65 @@ function Order() {
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [priceConfig, setPriceConfig] = useState({});
+  const [jenisLista, setJenisLista] = useState([]);
+  const [satuanList, setSatuanList] = useState([]);
+  const [instansiList, setInstansiList] = useState([]);
+  
   const [formData, setFormData] = useState({
-    pekerjaan: 'fotocopy',
+    instansi: '',
+    pekerjaan: '',
     deadline: '',
-    satuan: 'lembar',
+    satuan: '',
     jumlah: 1,
     harga: 0,
     keterangan: ''
   });
 
-  // Load price config from localStorage
+  // Load configurations from localStorage
   useEffect(() => {
+    // Load jenis pekerjaan
+    const savedJenis = localStorage.getItem('jenisLista');
+    if (savedJenis) {
+      const jenisList = JSON.parse(savedJenis);
+      setJenisLista(jenisList);
+      if (jenisList.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          pekerjaan: jenisList[0].nama
+        }));
+      }
+    }
+
+    // Load satuan
+    const savedSatuan = localStorage.getItem('satuanList');
+    if (savedSatuan) {
+      const satuanData = JSON.parse(savedSatuan);
+      setSatuanList(satuanData);
+      if (satuanData.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          satuan: satuanData[0]
+        }));
+      }
+    }
+
+    // Load instansi
+    const savedInstansi = localStorage.getItem('instansiList');
+    if (savedInstansi) {
+      const instansiData = JSON.parse(savedInstansi);
+      setInstansiList(instansiData);
+      if (instansiData.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          instansi: instansiData[0]
+        }));
+      }
+    }
+
+    // Load price config
     const savedConfig = localStorage.getItem('priceConfig');
     if (savedConfig) {
       setPriceConfig(JSON.parse(savedConfig));
-    } else {
-      // Default prices
-      const defaultPrices = {
-        fotocopy: 500,
-        cetak: 1000,
-        print: 1500,
-        jilid: 5000
-      };
-      setPriceConfig(defaultPrices);
-      localStorage.setItem('priceConfig', JSON.stringify(defaultPrices));
     }
 
     // Load orders from localStorage
@@ -91,11 +126,12 @@ function Order() {
 
     // Reset form
     setFormData({
-      pekerjaan: 'fotocopy',
+      instansi: instansiList[0] || '',
+      pekerjaan: jenisLista[0]?.nama || '',
       deadline: '',
-      satuan: 'lembar',
+      satuan: satuanList[0] || '',
       jumlah: 1,
-      harga: priceConfig['fotocopy'] || 0,
+      harga: jenisLista[0]?.harga || 0,
       keterangan: ''
     });
     setShowForm(false);
@@ -151,6 +187,21 @@ function Order() {
             <form onSubmit={handleSubmit} className="order-form">
               <div className="form-grid">
                 <div className="form-group">
+                  <label htmlFor="instansi">Instansi</label>
+                  <select
+                    id="instansi"
+                    name="instansi"
+                    value={formData.instansi}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    {instansiList.map((instansi, index) => (
+                      <option key={index} value={instansi}>{instansi}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
                   <label htmlFor="pekerjaan">Jenis Pekerjaan</label>
                   <select
                     id="pekerjaan"
@@ -159,10 +210,11 @@ function Order() {
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="fotocopy">Fotocopy</option>
-                    <option value="cetak">Cetak</option>
-                    <option value="print">Print</option>
-                    <option value="jilid">Jilid</option>
+                    {jenisLista.map((jenis) => (
+                      <option key={jenis.id} value={jenis.nama}>
+                        {jenis.nama.charAt(0).toUpperCase() + jenis.nama.slice(1)}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -188,10 +240,11 @@ function Order() {
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="pcs">Pcs</option>
-                    <option value="lembar">Lembar</option>
-                    <option value="lembar bolak balik">Lembar Bolak Balik</option>
-                    <option value="unit">Unit</option>
+                    {satuanList.map((satuan, index) => (
+                      <option key={index} value={satuan}>
+                        {satuan.charAt(0).toUpperCase() + satuan.slice(1)}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -266,6 +319,7 @@ function Order() {
               <thead>
                 <tr>
                   <th>ID Pesanan</th>
+                  <th>Instansi</th>
                   <th>Pekerjaan</th>
                   <th>Tgl Masuk</th>
                   <th>Deadline</th>
@@ -281,6 +335,7 @@ function Order() {
                 {orders.map((order) => (
                   <tr key={order.id}>
                     <td className="order-id">{order.id}</td>
+                    <td><span className="instansi-badge">{order.instansi || '-'}</span></td>
                     <td>
                       <span className={`badge badge-${order.pekerjaan}`}>
                         {order.pekerjaan.charAt(0).toUpperCase() + order.pekerjaan.slice(1)}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, FileText, Wallet, Settings, Calendar, TrendingUp, TrendingDown, Bell, Plus, X } from 'lucide-react';
+import { ShoppingCart, FileText, Wallet, Settings, Calendar, TrendingUp, TrendingDown, Bell, Plus, X, ChevronLeft, ChevronRight, Edit2, Save } from 'lucide-react';
 import './Home.css';
 
 function Home() {
@@ -10,6 +10,12 @@ function Home() {
   const [reminders, setReminders] = useState([]);
   const [showReminderForm, setShowReminderForm] = useState(false);
   const [newReminder, setNewReminder] = useState('');
+  
+  // Calendar states
+  const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
+  const [agendas, setAgendas] = useState({});
+  const [editingDate, setEditingDate] = useState(null);
+  const [agendaInput, setAgendaInput] = useState('');
 
   useEffect(() => {
     // Load orders
@@ -29,7 +35,87 @@ function Home() {
     if (savedReminders) {
       setReminders(JSON.parse(savedReminders));
     }
+
+    // Load agendas
+    const savedAgendas = localStorage.getItem('agendas');
+    if (savedAgendas) {
+      setAgendas(JSON.parse(savedAgendas));
+    }
   }, []);
+
+  // Get start of week (Monday)
+  function getStartOfWeek(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+    return new Date(d.setDate(diff));
+  }
+
+  // Generate week days
+  const getWeekDays = () => {
+    const days = [];
+    const start = new Date(currentWeekStart);
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(start);
+      date.setDate(start.getDate() + i);
+      days.push(date);
+    }
+    
+    return days;
+  };
+
+  // Navigate weeks
+  const goToPreviousWeek = () => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(newDate.getDate() - 7);
+    setCurrentWeekStart(newDate);
+  };
+
+  const goToNextWeek = () => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(newDate.getDate() + 7);
+    setCurrentWeekStart(newDate);
+  };
+
+  const goToToday = () => {
+    setCurrentWeekStart(getStartOfWeek(new Date()));
+  };
+
+  // Format date key for agenda storage
+  const getDateKey = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  // Add/Edit agenda
+  const handleAddAgenda = (dateKey) => {
+    if (agendaInput.trim()) {
+      const updatedAgendas = {
+        ...agendas,
+        [dateKey]: [...(agendas[dateKey] || []), { id: Date.now(), text: agendaInput.trim() }]
+      };
+      setAgendas(updatedAgendas);
+      localStorage.setItem('agendas', JSON.stringify(updatedAgendas));
+      setAgendaInput('');
+      setEditingDate(null);
+    }
+  };
+
+  // Delete agenda item
+  const handleDeleteAgenda = (dateKey, agendaId) => {
+    const updatedAgendas = {
+      ...agendas,
+      [dateKey]: agendas[dateKey].filter(a => a.id !== agendaId)
+    };
+    setAgendas(updatedAgendas);
+    localStorage.setItem('agendas', JSON.stringify(updatedAgendas));
+  };
+
+  // Check if date is today
+  const isToday = (date) => {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  };
 
   const modules = [
     {
@@ -277,6 +363,99 @@ function Home() {
               )}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Weekly Calendar Panel */}
+      <div className="calendar-panel">
+        <div className="calendar-header">
+          <div className="calendar-title-section">
+            <Calendar size={24} color="#4F46E5" />
+            <h2>Kalender Mingguan & Agenda</h2>
+          </div>
+          <div className="calendar-navigation">
+            <button onClick={goToPreviousWeek} className="nav-btn">
+              <ChevronLeft size={20} />
+            </button>
+            <button onClick={goToToday} className="today-btn">
+              Hari Ini
+            </button>
+            <button onClick={goToNextWeek} className="nav-btn">
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="calendar-week">
+          {getWeekDays().map((date, index) => {
+            const dateKey = getDateKey(date);
+            const dayAgendas = agendas[dateKey] || [];
+            const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            
+            return (
+              <div 
+                key={index} 
+                className={`calendar-day ${isToday(date) ? 'today' : ''}`}
+              >
+                <div className="day-header">
+                  <div className="day-name">{dayNames[date.getDay()]}</div>
+                  <div className="day-date">{date.getDate()}</div>
+                  <div className="day-month">
+                    {date.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })}
+                  </div>
+                </div>
+
+                <div className="day-content">
+                  <div className="agendas-list">
+                    {dayAgendas.map(agenda => (
+                      <div key={agenda.id} className="agenda-item">
+                        <div className="agenda-text">{agenda.text}</div>
+                        <button 
+                          className="delete-agenda-btn" 
+                          onClick={() => handleDeleteAgenda(dateKey, agenda.id)}
+                          title="Hapus"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {editingDate === dateKey ? (
+                    <div className="agenda-form">
+                      <input
+                        type="text"
+                        placeholder="Tambah agenda..."
+                        value={agendaInput}
+                        onChange={(e) => setAgendaInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddAgenda(dateKey)}
+                        autoFocus
+                      />
+                      <div className="agenda-form-actions">
+                        <button onClick={() => handleAddAgenda(dateKey)} className="save-agenda-btn">
+                          <Save size={14} />
+                        </button>
+                        <button 
+                          onClick={() => { setEditingDate(null); setAgendaInput(''); }} 
+                          className="cancel-agenda-btn"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button 
+                      className="add-agenda-btn" 
+                      onClick={() => setEditingDate(dateKey)}
+                    >
+                      <Plus size={16} />
+                      Tambah Agenda
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

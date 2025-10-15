@@ -6,7 +6,7 @@
 
 .home-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
   padding-top: 2rem;
 }
 
@@ -26,19 +26,33 @@
   font-weight: 300;
 }
 
-.modules-grid {
+/* Main Content Layout */
+.home-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr 400px;
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Modules Section - 2x2 Grid */
+.modules-section {
+  display: flex;
+  align-items: start;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .module-card {
   background: white;
   border-radius: 20px;
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -69,11 +83,11 @@
 }
 
 .module-icon-wrapper {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 1.5rem;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
   background: linear-gradient(135deg, var(--module-color), var(--module-color));
-  border-radius: 20px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,22 +105,306 @@
 }
 
 .module-title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1f2937;
   margin: 0 0 0.5rem 0;
 }
 
 .module-description {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #6b7280;
   margin: 0;
   font-weight: 400;
 }
 
+/* Statistics Panel */
+.statistics-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stat-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #4F46E5;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value.finance {
+  font-size: 1.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Finance Boxes */
+.finance-boxes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.income-box {
+  border-left: 4px solid #10b981;
+}
+
+.income-box .stat-value {
+  color: #10b981;
+}
+
+.expense-box {
+  border-left: 4px solid #ef4444;
+}
+
+.expense-box .stat-value {
+  color: #ef4444;
+}
+
+/* Deadlines Box */
+.deadlines-box {
+  max-height: 300px;
+}
+
+.deadlines-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.deadline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.deadline-item:hover {
+  background: #f3f4f6;
+}
+
+.deadline-info {
+  flex: 1;
+}
+
+.deadline-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.deadline-work {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.deadline-days {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #4F46E5;
+  background: #e0e7ff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.deadline-days.urgent {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* Reminders Box */
+.reminders-box {
+  min-height: 200px;
+}
+
+.add-reminder-btn {
+  background: #4F46E5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-reminder-btn:hover {
+  background: #4338ca;
+  transform: scale(1.1);
+}
+
+.reminder-form {
+  margin-bottom: 1rem;
+}
+
+.reminder-form input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.reminder-form input:focus {
+  outline: none;
+  border-color: #4F46E5;
+}
+
+.reminder-form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.save-btn, .cancel-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+}
+
+.save-btn {
+  background: #4F46E5;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #4338ca;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.reminders-list {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.reminder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.reminder-item:hover {
+  background: #f3f4f6;
+}
+
+.reminder-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #1f2937;
+  word-wrap: break-word;
+}
+
+.delete-reminder-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.delete-reminder-btn:hover {
+  background: #fecaca;
+  transform: scale(1.1);
+}
+
+.no-data {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  padding: 1rem 0;
+  margin: 0;
+}
+
+/* Scrollbar Styling */
+.deadlines-list::-webkit-scrollbar,
+.reminders-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.deadlines-list::-webkit-scrollbar-track,
+.reminders-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+.deadlines-list::-webkit-scrollbar-thumb,
+.reminders-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+.deadlines-list::-webkit-scrollbar-thumb:hover,
+.reminders-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
 .home-footer {
   text-align: center;
-  margin-top: 4rem;
+  margin-top: 3rem;
   padding: 2rem 0;
   color: rgba(255, 255, 255, 0.8);
 }
@@ -114,6 +412,21 @@
 .home-footer p {
   margin: 0;
   font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .home-content {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-panel {
+    order: -1;
+  }
+
+  .modules-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -127,20 +440,36 @@
 
   .modules-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+  }
+
+  .finance-boxes {
+    grid-template-columns: 1fr;
   }
 
   .module-card {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem;
   }
 
   .module-icon-wrapper {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    padding: 1rem;
   }
 
-  .module-icon {
-    width: 40px;
-    height: 40px;
+  .stat-box {
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .stat-value.finance {
+    font-size: 1.25rem;
   }
 }

@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? '/edustore/' : '/edustore/',
+  base: '/edustore/',
   plugins: [react()],
   test: {
     globals: true,

@@ -16,6 +16,27 @@ function Konfigurasi() {
   const [importPreview, setImportPreview] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [importFileName, setImportFileName] = useState('');
+  const allowedImportKeys = ['orders','transactions','agendas','reminders','appLogo','jenisLista','satuanList','instansiList','priceConfig'];
+
+  const createBackupAndDownload = () => {
+    try {
+      const payload = {};
+      allowedImportKeys.forEach(k => {
+        const v = localStorage.getItem(k);
+        if (v !== null) payload[k] = JSON.parse(v);
+      });
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `palugada-backup-${ts}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Gagal membuat backup: ' + err.message);
+    }
+  };
   
   // State untuk form
   const [showJenisForm, setShowJenisForm] = useState(false);
@@ -257,6 +278,10 @@ function Konfigurasi() {
               URL.revokeObjectURL(url);
             }}>
               <Save size={16} style={{marginRight:6}}/> Export JSON
+            </button>
+
+            <button className="backup-btn" onClick={createBackupAndDownload} title="Download backup of current local data">
+              Backup
             </button>
 
             <label className="json-import-label">
@@ -512,6 +537,8 @@ function Konfigurasi() {
                       const f = e.target.files[0];
                       if (!f) return;
                       try {
+                        // create a backup of existing localStorage keys before overwriting
+                        createBackupAndDownload();
                         const text = await f.text();
                         const data = JSON.parse(text);
                         Object.keys(data).forEach(k => {

@@ -519,6 +519,14 @@
   align-items: center;
   cursor: pointer;
 }
+.backup-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+}
 .json-import-label {
   display: flex;
   align-items: center;

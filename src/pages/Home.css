@@ -10,6 +10,29 @@
   padding-top: 2rem;
 }
 
+.app-logo {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-logo img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background: white;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.app-logo img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
 .home-title {
   font-size: 3.5rem;
   font-weight: 800;

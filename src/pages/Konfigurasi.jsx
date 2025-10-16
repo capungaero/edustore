@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, Save, Edit2, X } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Save, Edit2, X, Upload, Image } from 'lucide-react';
 import './Konfigurasi.css';
 
 function Konfigurasi() {
@@ -11,6 +11,8 @@ function Konfigurasi() {
   const [satuanList, setSatuanList] = useState([]);
   const [instansiList, setInstansiList] = useState([]);
   const [priceConfig, setPriceConfig] = useState({});
+  const [logo, setLogo] = useState('');
+  const [logoPreview, setLogoPreview] = useState('');
   
   // State untuk form
   const [showJenisForm, setShowJenisForm] = useState(false);
@@ -64,6 +66,13 @@ function Konfigurasi() {
     const savedPrice = localStorage.getItem('priceConfig');
     if (savedPrice) {
       setPriceConfig(JSON.parse(savedPrice));
+    }
+
+    // Load logo
+    const savedLogo = localStorage.getItem('appLogo');
+    if (savedLogo) {
+      setLogo(savedLogo);
+      setLogoPreview(savedLogo);
     }
   }, []);
 
@@ -160,6 +169,46 @@ function Konfigurasi() {
     }
   };
 
+  // Handler untuk Logo
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Hanya file gambar yang diperbolehkan!');
+        return;
+      }
+
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Ukuran file maksimal 2MB!');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveLogo = () => {
+    if (logoPreview) {
+      setLogo(logoPreview);
+      localStorage.setItem('appLogo', logoPreview);
+      alert('Logo berhasil disimpan!');
+    }
+  };
+
+  const handleDeleteLogo = () => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus logo?')) {
+      setLogo('');
+      setLogoPreview('');
+      localStorage.removeItem('appLogo');
+    }
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -177,11 +226,64 @@ function Konfigurasi() {
         </button>
         <div className="header-content">
           <h1 className="konfigurasi-title">Konfigurasi</h1>
-          <p className="konfigurasi-subtitle">Pengaturan Jenis Pekerjaan, Satuan, dan Instansi</p>
+          <p className="konfigurasi-subtitle">Pengaturan Logo, Jenis Pekerjaan, Satuan, dan Instansi</p>
         </div>
       </header>
 
       <div className="konfigurasi-content">
+        {/* Logo Aplikasi */}
+        <div className="config-section">
+          <div className="section-header">
+            <h2>Logo Aplikasi</h2>
+          </div>
+
+          <div className="logo-config">
+            <div className="logo-preview-container">
+              {logoPreview ? (
+                <div className="logo-preview">
+                  <img src={logoPreview} alt="Logo Preview" />
+                  <button className="delete-logo-btn" onClick={handleDeleteLogo}>
+                    <Trash2 size={16} />
+                    Hapus Logo
+                  </button>
+                </div>
+              ) : (
+                <div className="logo-placeholder">
+                  <Image size={48} color="#9ca3af" />
+                  <p>Belum ada logo</p>
+                </div>
+              )}
+            </div>
+
+            <div className="logo-upload-section">
+              <label htmlFor="logo-upload" className="upload-label">
+                <Upload size={20} />
+                Pilih Logo
+                <input
+                  id="logo-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoChange}
+                  style={{ display: 'none' }}
+                />
+              </label>
+              
+              {logoPreview !== logo && logoPreview && (
+                <button className="save-logo-btn" onClick={handleSaveLogo}>
+                  <Save size={20} />
+                  Simpan Logo
+                </button>
+              )}
+              
+              <div className="logo-info">
+                <p>Format: JPG, PNG, GIF</p>
+                <p>Ukuran maksimal: 2MB</p>
+                <p>Rekomendasi: 300x300px</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Jenis Pekerjaan & Harga */}
         <div className="config-section">
           <div className="section-header">

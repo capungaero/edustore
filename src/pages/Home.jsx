@@ -10,6 +10,7 @@ function Home() {
   const [reminders, setReminders] = useState([]);
   const [showReminderForm, setShowReminderForm] = useState(false);
   const [newReminder, setNewReminder] = useState('');
+  const [logo, setLogo] = useState('');
   
   // Calendar states
   const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
@@ -40,6 +41,12 @@ function Home() {
     const savedAgendas = localStorage.getItem('agendas');
     if (savedAgendas) {
       setAgendas(JSON.parse(savedAgendas));
+    }
+
+    // Load logo
+    const savedLogo = localStorage.getItem('appLogo');
+    if (savedLogo) {
+      setLogo(savedLogo);
     }
   }, []);
 
@@ -232,7 +239,12 @@ function Home() {
   return (
     <div className="home-container">
       <header className="home-header">
-        <h1 className="home-title">Manajemen Order</h1>
+        {logo && (
+          <div className="app-logo">
+            <img src={logo} alt="Palugada Corp Logo" />
+          </div>
+        )}
+        <h1 className="home-title">Palugada Corp</h1>
         <p className="home-subtitle">Sistem Manajemen Pesanan Terintegrasi</p>
       </header>
 

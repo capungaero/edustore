@@ -1,0 +1,37 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "nama": "Order Contoh",
+      "namaPemesan": "Budi",
+      "tanggal": "2025-10-16",
+      "deadline": "2025-10-20",
+      "items": [
+        { "jenis": "fotocopy", "jumlah": 10, "satuan": "lembar", "harga": 500 }
+      ],
+      "total": 5000
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "orderId": 1,
+      "tanggal": "2025-10-16",
+      "jumlah": 5000,
+      "metode": "tunai"
+    }
+  ],
+  "agendas": [
+    { "id": 1, "title": "Pengambilan Dokumen", "date": "2025-10-17" }
+  ],
+  "reminders": [
+    { "id": 1, "text": "Cek stok kertas", "date": "2025-10-16" }
+  ],
+  "appLogo": null,
+  "jenisLista": [
+    { "id": 1, "nama": "fotocopy", "harga": 500 }
+  ],
+  "satuanList": ["pcs", "lembar"],
+  "instansiList": ["SD", "SMP"],
+  "priceConfig": { "fotocopy": 500 }
+}

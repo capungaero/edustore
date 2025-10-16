@@ -529,3 +529,28 @@
   border: 1px dashed #d1d5db;
   cursor: pointer;
 }
+
+/* Import modal */
+.import-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.import-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  width: 420px;
+  max-width: calc(100% - 32px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+.import-modal h3 { margin-top: 0; margin-bottom: 0.4rem; }
+.import-preview { max-height: 180px; overflow: auto; border: 1px solid #eef2f7; padding: 0.6rem; border-radius: 8px; background: #fafafa; }
+.import-preview ul { margin: 0; padding-left: 1rem; }
+.import-modal-actions { display:flex; gap:0.6rem; justify-content:flex-end; margin-top:0.8rem; }
+.confirm-import-btn { background:#10b981; color:white; border:none; padding:0.5rem 0.8rem; border-radius:8px; cursor:pointer; }
+.cancel-import-btn { background:#f3f4f6; color:#374151; border:none; padding:0.5rem 0.8rem; border-radius:8px; cursor:pointer; }

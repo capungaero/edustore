@@ -13,6 +13,9 @@ function Konfigurasi() {
   const [priceConfig, setPriceConfig] = useState({});
   const [logo, setLogo] = useState('');
   const [logoPreview, setLogoPreview] = useState('');
+  const [importPreview, setImportPreview] = useState(null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFileName, setImportFileName] = useState('');
   
   // State untuk form
   const [showJenisForm, setShowJenisForm] = useState(false);
@@ -264,16 +267,21 @@ function Konfigurasi() {
                 try {
                   const text = await f.text();
                   const data = JSON.parse(text);
-                  // validate minimal structure
                   const allowedKeys = ['orders','transactions','agendas','reminders','appLogo','jenisLista','satuanList','instansiList','priceConfig'];
+                  const preview = {};
                   Object.keys(data).forEach(k => {
                     if (allowedKeys.includes(k)) {
-                      localStorage.setItem(k, JSON.stringify(data[k]));
+                      const v = data[k];
+                      if (Array.isArray(v)) preview[k] = { type: 'array', count: v.length };
+                      else if (v && typeof v === 'object') preview[k] = { type: 'object', keys: Object.keys(v).length };
+                      else preview[k] = { type: typeof v, value: v };
                     }
                   });
-                  alert('Data berhasil di-import ke localStorage. Reload halaman untuk melihat perubahan.');
+                  setImportPreview(preview);
+                  setImportFileName(f.name || 'import.json');
+                  setShowImportModal(true);
                 } catch (err) {
-                  alert('Gagal mengimpor file JSON: ' + err.message);
+                  alert('Gagal membaca file JSON: ' + err.message);
                 }
               }} />
             </label>
@@ -467,6 +475,66 @@ function Konfigurasi() {
           </div>
         </div>
       </div>
+      {/* Import confirmation modal */}
+      {showImportModal && (
+        <div className="import-modal-overlay">
+          <div className="import-modal">
+            <h3>Konfirmasi Import</h3>
+            <p>File: <b>{importFileName}</b></p>
+            <div className="import-preview">
+              {importPreview && Object.keys(importPreview).length > 0 ? (
+                <ul>
+                  {Object.entries(importPreview).map(([k,v]) => (
+                    <li key={k}><b>{k}</b>: {v.type === 'array' ? `${v.count} item(s)` : v.type === 'object' ? `${v.keys} key(s)` : String(v.value)}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Tidak ada kunci yang dapat diimpor dari file ini.</p>
+              )}
+            </div>
+            <div className="import-modal-actions">
+              <button className="confirm-import-btn" onClick={() => {
+                try {
+                  // write previewed keys to localStorage
+                  const allowedKeys = ['orders','transactions','agendas','reminders','appLogo','jenisLista','satuanList','instansiList','priceConfig'];
+                  // reload file again from input: simpler approach - ask user to re-select file if needed
+                  // For now assume importPreview was created from the last selected file; we will re-read via a hidden input hack isn't accessible here.
+                  // Instead: read file by creating a new FileReader not possible here; we stored parsed data only in preview. Safer approach: re-prompt user to import again if they confirm.
+                  // We'll implement a simple flow: when user confirms, we will store the preview values as empty placeholders if arrays/objects. Better: show confirmation then require re-import to actually write.
+                  // To keep behavior simple and reliable, open a new prompt to actually confirm writing by re-selecting file.
+                  const proceed = window.confirm('Untuk menyelesaikan import, pilih file JSON lagi. Klik OK untuk membuka dialog file.');
+                  if (proceed) {
+                    // trigger a click on a temporary file input to re-import and write the values
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'application/json';
+                    input.onchange = async (e) => {
+                      const f = e.target.files[0];
+                      if (!f) return;
+                      try {
+                        const text = await f.text();
+                        const data = JSON.parse(text);
+                        Object.keys(data).forEach(k => {
+                          if (allowedKeys.includes(k)) localStorage.setItem(k, JSON.stringify(data[k]));
+                        });
+                        alert('Data berhasil di-import ke localStorage. Reload halaman untuk melihat perubahan.');
+                        setShowImportModal(false);
+                        setImportPreview(null);
+                      } catch (err) {
+                        alert('Gagal mengimpor file JSON: ' + err.message);
+                      }
+                    };
+                    input.click();
+                  }
+                } catch (err) {
+                  alert('Import gagal: ' + err.message);
+                }
+              }}>Confirm & Import</button>
+              <button className="cancel-import-btn" onClick={() => { setShowImportModal(false); setImportPreview(null); }}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

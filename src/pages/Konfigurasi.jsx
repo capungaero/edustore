@@ -102,10 +102,19 @@ function Konfigurasi() {
     let mounted = true;
     (async () => {
       try {
-        const wasmUrl = SQL_WASM_PATH;
-        const res = await fetch(wasmUrl);
-        if (!res.ok) throw new Error('WASM fetch failed: ' + res.status);
-        const buffer = await res.arrayBuffer();
+        const wasmUrls = [SQL_WASM_PATH, 'https://cdn.jsdelivr.net/npm/sql.js@1.10.0/dist/sql-wasm.wasm', 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.0/sql-wasm.wasm'];
+        let buffer = null;
+        for (const wasmUrl of wasmUrls) {
+          try {
+            const res = await fetch(wasmUrl);
+            if (!res.ok) throw new Error('WASM fetch failed: ' + res.status + ' @ ' + wasmUrl);
+            buffer = await res.arrayBuffer();
+            break;
+          } catch (err) {
+            console.warn('WASM fetch failed for', wasmUrl, err);
+          }
+        }
+        if (!buffer) throw new Error('All WASM fetch attempts failed');
         const SQL = await initSqlJs({ wasmBinary: new Uint8Array(buffer) });
         if (!mounted) return;
         setSQLFactory(SQL);

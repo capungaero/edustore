@@ -139,11 +139,12 @@
   font-weight: 400;
 }
 
-/* Statistics Panel */
+/* Statistics Panel - Grid 3x3 */
 .statistics-panel {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .stat-box {
@@ -152,6 +153,9 @@
   padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-box:hover {
@@ -164,6 +168,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f3f4f6;
 }
 
 .stat-header h3 {
@@ -173,6 +179,19 @@
   color: #374151;
 }
 
+.stat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stat-item {
+  padding: 0.5rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
 .stat-value {
   font-size: 2.5rem;
   font-weight: 800;
@@ -180,36 +199,25 @@
   margin-bottom: 0.25rem;
 }
 
-.stat-value.finance {
-  font-size: 1.5rem;
+.stat-value-small {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 0.25rem;
+}
+
+.stat-value-small.income {
+  color: #10b981;
+}
+
+.stat-value-small.expense {
+  color: #ef4444;
 }
 
 .stat-label {
   font-size: 0.875rem;
   color: #6b7280;
-}
-
-/* Finance Boxes */
-.finance-boxes {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.income-box {
-  border-left: 4px solid #10b981;
-}
-
-.income-box .stat-value {
-  color: #10b981;
-}
-
-.expense-box {
-  border-left: 4px solid #ef4444;
-}
-
-.expense-box .stat-value {
-  color: #ef4444;
+  font-weight: 500;
 }
 
 /* Deadlines Box */
@@ -788,16 +796,21 @@
     padding: 1rem;
   }
 
+  .statistics-panel {
+    grid-template-columns: 1fr;
+  }
+
   .stat-box {
     padding: 1rem;
+    min-height: 150px;
   }
 
   .stat-value {
     font-size: 2rem;
   }
 
-  .stat-value.finance {
-    font-size: 1.25rem;
+  .stat-value-small {
+    font-size: 1.1rem;
   }
 
   .calendar-panel {
@@ -814,12 +827,20 @@
 }
 
 @media (max-width: 1024px) {
+  .statistics-panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .calendar-week {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
+  .statistics-panel {
+    grid-template-columns: 1fr;
+  }
+
   .calendar-week {
     grid-template-columns: repeat(2, 1fr);
   }

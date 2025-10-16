@@ -298,34 +298,97 @@ function Home() {
           </div>
         </div>
 
-        {/* Statistics Panel */}
+        {/* Statistics Panel - Grid 3x3 */}
         <div className="statistics-panel">
-          {/* Total Order Bulan Ini */}
+          {/* Order Bulan Ini & Keuangan */}
           <div className="stat-box">
             <div className="stat-header">
-              <h3>Order Bulan Ini</h3>
+              <h3>Order & Keuangan</h3>
               <Calendar size={20} color="#4F46E5" />
             </div>
-            <div className="stat-value">{getCurrentMonthOrders().length}</div>
-            <div className="stat-label">Total Pesanan</div>
+            <div className="stat-content">
+              <div className="stat-item">
+                <div className="stat-label">Order Bulan Ini</div>
+                <div className="stat-value-small">{getCurrentMonthOrders().length} pesanan</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-label">
+                  <TrendingUp size={16} color="#10b981" style={{ display: 'inline', marginRight: '4px' }} />
+                  Pemasukan
+                </div>
+                <div className="stat-value-small income">{formatCurrency(getTotalIncome())}</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-label">
+                  <TrendingDown size={16} color="#ef4444" style={{ display: 'inline', marginRight: '4px' }} />
+                  Pengeluaran
+                </div>
+                <div className="stat-value-small expense">{formatCurrency(getTotalExpenses())}</div>
+              </div>
+            </div>
           </div>
 
-          {/* Income & Expenses */}
-          <div className="finance-boxes">
-            <div className="stat-box income-box">
-              <div className="stat-header">
-                <h3>Pemasukan</h3>
-                <TrendingUp size={20} color="#10b981" />
-              </div>
-              <div className="stat-value finance">{formatCurrency(getTotalIncome())}</div>
+          {/* Placeholder for future stats */}
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 2</h3>
             </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
+            </div>
+          </div>
 
-            <div className="stat-box expense-box">
-              <div className="stat-header">
-                <h3>Pengeluaran</h3>
-                <TrendingDown size={20} color="#ef4444" />
-              </div>
-              <div className="stat-value finance">{formatCurrency(getTotalExpenses())}</div>
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 3</h3>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 4</h3>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 5</h3>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 6</h3>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 7</h3>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <div className="stat-header">
+              <h3>Statistik 8</h3>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Coming Soon</div>
             </div>
           </div>
 

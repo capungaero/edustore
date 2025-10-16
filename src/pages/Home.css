@@ -144,7 +144,7 @@
 .statistics-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 1.1rem;
   height: 100%;
 }
 

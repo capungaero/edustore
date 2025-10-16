@@ -241,10 +241,9 @@ function Home() {
       <header className="home-header">
         {logo && (
           <div className="app-logo">
-            <img src={logo} alt="Palugada Corp Logo" />
+            <img src={logo} alt="Logo" />
           </div>
         )}
-        <h1 className="home-title">Palugada Corp</h1>
         <p className="home-subtitle">Sistem Manajemen Pesanan Terintegrasi</p>
       </header>
 

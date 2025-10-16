@@ -31,6 +31,7 @@ function Konfigurasi() {
   const [dbMode, setDbMode] = useState('localStorage'); // 'sqlite' or 'localStorage'
   const [dbFileName, setDbFileName] = useState('');
   const [sqlJsLoaded, setSqlJsLoaded] = useState(false);
+  const [SQLFactory, setSQLFactory] = useState(null);
 
   // Path WASM harus mengikuti base path Vite (agar support subfolder GitHub Pages)
   const SQL_WASM_PATH = import.meta.env.BASE_URL + 'sql-wasm.wasm';
@@ -96,11 +97,20 @@ function Konfigurasi() {
     localStorage.setItem('priceConfig', JSON.stringify(newPriceConfig));
   }, [jenisLista]);
 
-  // Load sql.js
+  // Load sql.js by fetching the wasm binary first and initialize with wasmBinary
   useEffect(() => {
-    initSqlJs({ locateFile: file => SQL_WASM_PATH })
-      .then(SQL => {
+    let mounted = true;
+    (async () => {
+      try {
+        const wasmUrl = SQL_WASM_PATH;
+        const res = await fetch(wasmUrl);
+        if (!res.ok) throw new Error('WASM fetch failed: ' + res.status);
+        const buffer = await res.arrayBuffer();
+        const SQL = await initSqlJs({ wasmBinary: new Uint8Array(buffer) });
+        if (!mounted) return;
+        setSQLFactory(SQL);
         setSqlJsLoaded(true);
+
         // Try to load DB from localStorage (if any)
         const dbData = localStorage.getItem('sqliteDb');
         if (dbData) {
@@ -108,7 +118,14 @@ function Konfigurasi() {
           setDb(new SQL.Database(uInt8Array));
           setDbMode('sqlite');
         }
-      });
+      } catch (err) {
+        console.error('Failed to initialize sql.js or fetch wasm:', err);
+        setSqlJsLoaded(false);
+        setSQLFactory(null);
+        // keep fallback to localStorage
+      }
+    })();
+    return () => { mounted = false; };
   }, []);
 
   // Update database to localStorage
@@ -124,8 +141,14 @@ function Konfigurasi() {
     const file = e.target.files[0];
     if (!file) return;
     const arrayBuffer = await file.arrayBuffer();
-    const SQL = await initSqlJs({ locateFile: file => SQL_WASM_PATH });
-    const loadedDb = new SQL.Database(new Uint8Array(arrayBuffer));
+    if (!SQLFactory) {
+      alert('sql.js belum siap. Menggunakan localStorage sebagai fallback.');
+      // still persist the raw bytes to localStorage for later import
+      localStorage.setItem('sqliteDb', JSON.stringify(Array.from(new Uint8Array(arrayBuffer))));
+      setDbMode('localStorage');
+      return;
+    }
+    const loadedDb = new SQLFactory.Database(new Uint8Array(arrayBuffer));
     setDb(loadedDb);
     setDbMode('sqlite');
     setDbFileName(file.name);

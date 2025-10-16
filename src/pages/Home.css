@@ -32,22 +32,6 @@
 }
 
 
-.home-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: white;
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  letter-spacing: -1px;
-}
-
-.home-subtitle {
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-top: 0.5rem;
-  font-weight: 300;
-}
-
 /* Main Content Layout */
 .home-content {
   display: grid;

@@ -492,3 +492,40 @@
   color: #6b7280;
   margin-top: 0.2rem;
 }
+
+.json-section {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+}
+.json-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+.json-actions-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.json-export-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.json-import-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f3f4f6;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+  cursor: pointer;
+}

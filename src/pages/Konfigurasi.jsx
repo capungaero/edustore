@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Trash2, Save, Edit2, X, Upload, Image } from 'lucide-react';
-import initSqlJs from 'sql.js';
 import './Konfigurasi.css';
 
 function Konfigurasi() {
@@ -26,15 +25,6 @@ function Konfigurasi() {
   
   const [editingJenis, setEditingJenis] = useState(null);
 
-  // Database state
-  const [db, setDb] = useState(null);
-  const [dbMode, setDbMode] = useState('localStorage'); // 'sqlite' or 'localStorage'
-  const [dbFileName, setDbFileName] = useState('');
-  const [sqlJsLoaded, setSqlJsLoaded] = useState(false);
-  const [SQLFactory, setSQLFactory] = useState(null);
-
-  // Path WASM harus mengikuti base path Vite (agar support subfolder GitHub Pages)
-  const SQL_WASM_PATH = import.meta.env.BASE_URL + 'sql-wasm.wasm';
 
   // Load data dari localStorage
   useEffect(() => {
@@ -97,86 +87,8 @@ function Konfigurasi() {
     localStorage.setItem('priceConfig', JSON.stringify(newPriceConfig));
   }, [jenisLista]);
 
-  // Load sql.js by fetching the wasm binary first and initialize with wasmBinary
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const wasmUrls = [SQL_WASM_PATH, 'https://cdn.jsdelivr.net/npm/sql.js@1.10.0/dist/sql-wasm.wasm', 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.0/sql-wasm.wasm'];
-        let buffer = null;
-        for (const wasmUrl of wasmUrls) {
-          try {
-            const res = await fetch(wasmUrl);
-            if (!res.ok) throw new Error('WASM fetch failed: ' + res.status + ' @ ' + wasmUrl);
-            buffer = await res.arrayBuffer();
-            break;
-          } catch (err) {
-            console.warn('WASM fetch failed for', wasmUrl, err);
-          }
-        }
-        if (!buffer) throw new Error('All WASM fetch attempts failed');
-        const SQL = await initSqlJs({ wasmBinary: new Uint8Array(buffer) });
-        if (!mounted) return;
-        setSQLFactory(SQL);
-        setSqlJsLoaded(true);
 
-        // Try to load DB from localStorage (if any)
-        const dbData = localStorage.getItem('sqliteDb');
-        if (dbData) {
-          const uInt8Array = new Uint8Array(JSON.parse(dbData));
-          setDb(new SQL.Database(uInt8Array));
-          setDbMode('sqlite');
-        }
-      } catch (err) {
-        console.error('Failed to initialize sql.js or fetch wasm:', err);
-        setSqlJsLoaded(false);
-        setSQLFactory(null);
-        // keep fallback to localStorage
-      }
-    })();
-    return () => { mounted = false; };
-  }, []);
 
-  // Update database to localStorage
-  useEffect(() => {
-    if (db) {
-      const data = db.export();
-      localStorage.setItem('sqliteDb', JSON.stringify(Array.from(new Uint8Array(data))));
-    }
-  }, [db]);
-
-  // Handle upload SQLite file
-  const handleDbUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const arrayBuffer = await file.arrayBuffer();
-    if (!SQLFactory) {
-      alert('sql.js belum siap. Menggunakan localStorage sebagai fallback.');
-      // still persist the raw bytes to localStorage for later import
-      localStorage.setItem('sqliteDb', JSON.stringify(Array.from(new Uint8Array(arrayBuffer))));
-      setDbMode('localStorage');
-      return;
-    }
-    const loadedDb = new SQLFactory.Database(new Uint8Array(arrayBuffer));
-    setDb(loadedDb);
-    setDbMode('sqlite');
-    setDbFileName(file.name);
-    // Simpan ke localStorage agar persist
-    localStorage.setItem('sqliteDb', JSON.stringify(Array.from(new Uint8Array(arrayBuffer))));
-  };
-
-  // Handle export SQLite file
-  const handleDbExport = () => {
-    if (!db) return;
-    const data = db.export();
-    const blob = new Blob([data], { type: 'application/octet-stream' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = dbFileName || 'palugada-db.sqlite';
-    a.click();
-    URL.revokeObjectURL(url);
-  };
 
   // Handlers untuk Jenis Pekerjaan
   const handleAddJenis = () => {
@@ -323,24 +235,48 @@ function Konfigurasi() {
       </header>
 
       <div className="konfigurasi-content">
-        {/* Database SQLite Section */}
-        <section className="db-section">
-          <h2>Database (SQLite)</h2>
-          <div className="db-status-row">
-            <span>Status: <b>{dbMode === 'sqlite' ? 'Menggunakan file database SQLite' : 'Menggunakan localStorage browser'}</b></span>
-          </div>
-          <div className="db-actions-row">
-            <label className="db-upload-label">
-              <Upload size={18} style={{marginRight: 6}} />
-              <span>Load/Import file SQLite</span>
-              <input type="file" accept=".sqlite,.db,.sqlite3,application/octet-stream" style={{display:'none'}} onChange={handleDbUpload} />
-            </label>
-            <button className="db-export-btn" onClick={handleDbExport} disabled={!db} style={{marginLeft: 12}}>
-              <Save size={16} style={{marginRight: 4}} /> Export/Download DB
+
+        {/* JSON Import/Export Section */}
+        <section className="json-section">
+          <h2>Data (JSON)</h2>
+          <div className="json-actions-row">
+            <button className="json-export-btn" onClick={() => {
+              // keys to export
+              const keys = ['orders','transactions','agendas','reminders','appLogo','jenisLista','satuanList','instansiList','priceConfig'];
+              const payload = {};
+              keys.forEach(k => { const v = localStorage.getItem(k); if (v !== null) payload[k] = JSON.parse(v); });
+              const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'palugada-data.json';
+              a.click();
+              URL.revokeObjectURL(url);
+            }}>
+              <Save size={16} style={{marginRight:6}}/> Export JSON
             </button>
-          </div>
-          <div className="db-filename-row">
-            {dbFileName && <span>File aktif: <b>{dbFileName}</b></span>}
+
+            <label className="json-import-label">
+              <Upload size={16} style={{marginRight:6}}/> Import JSON
+              <input type="file" accept="application/json" style={{display:'none'}} onChange={async (e) => {
+                const f = e.target.files[0];
+                if (!f) return;
+                try {
+                  const text = await f.text();
+                  const data = JSON.parse(text);
+                  // validate minimal structure
+                  const allowedKeys = ['orders','transactions','agendas','reminders','appLogo','jenisLista','satuanList','instansiList','priceConfig'];
+                  Object.keys(data).forEach(k => {
+                    if (allowedKeys.includes(k)) {
+                      localStorage.setItem(k, JSON.stringify(data[k]));
+                    }
+                  });
+                  alert('Data berhasil di-import ke localStorage. Reload halaman untuk melihat perubahan.');
+                } catch (err) {
+                  alert('Gagal mengimpor file JSON: ' + err.message);
+                }
+              }} />
+            </label>
           </div>
         </section>
 

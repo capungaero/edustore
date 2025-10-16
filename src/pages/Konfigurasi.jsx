@@ -32,8 +32,8 @@ function Konfigurasi() {
   const [dbFileName, setDbFileName] = useState('');
   const [sqlJsLoaded, setSqlJsLoaded] = useState(false);
 
-  // Ganti path WASM ke public agar tidak 404
-  const SQL_WASM_PATH = '/sql-wasm.wasm';
+  // Path WASM harus mengikuti base path Vite (agar support subfolder GitHub Pages)
+  const SQL_WASM_PATH = import.meta.env.BASE_URL + 'sql-wasm.wasm';
 
   // Load data dari localStorage
   useEffect(() => {

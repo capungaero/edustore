@@ -244,7 +244,6 @@ function Home() {
             <img src={logo} alt="Logo" />
           </div>
         )}
-        <p className="home-subtitle">Sistem Manajemen Pesanan Terintegrasi</p>
       </header>
 
       <div className="home-content">

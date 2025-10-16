@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Trash2, Save, Edit2, X, Upload, Image } from 'lucide-react';
+import initSqlJs from 'sql.js';
 import './Konfigurasi.css';
 
 function Konfigurasi() {
@@ -24,6 +25,12 @@ function Konfigurasi() {
   const [newInstansi, setNewInstansi] = useState('');
   
   const [editingJenis, setEditingJenis] = useState(null);
+
+  // Database state
+  const [db, setDb] = useState(null);
+  const [dbMode, setDbMode] = useState('localStorage'); // 'sqlite' or 'localStorage'
+  const [dbFileName, setDbFileName] = useState('');
+  const [sqlJsLoaded, setSqlJsLoaded] = useState(false);
 
   // Load data dari localStorage
   useEffect(() => {
@@ -85,6 +92,56 @@ function Konfigurasi() {
     setPriceConfig(newPriceConfig);
     localStorage.setItem('priceConfig', JSON.stringify(newPriceConfig));
   }, [jenisLista]);
+
+  // Load sql.js
+  useEffect(() => {
+    initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` })
+      .then(SQL => {
+        setSqlJsLoaded(true);
+        // Try to load DB from localStorage (if any)
+        const dbData = localStorage.getItem('sqliteDb');
+        if (dbData) {
+          const uInt8Array = new Uint8Array(JSON.parse(dbData));
+          setDb(new SQL.Database(uInt8Array));
+          setDbMode('sqlite');
+        }
+      });
+  }, []);
+
+  // Update database to localStorage
+  useEffect(() => {
+    if (db) {
+      const data = db.export();
+      localStorage.setItem('sqliteDb', JSON.stringify(Array.from(new Uint8Array(data))));
+    }
+  }, [db]);
+
+  // Handle upload SQLite file
+  const handleDbUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const arrayBuffer = await file.arrayBuffer();
+    const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
+    const loadedDb = new SQL.Database(new Uint8Array(arrayBuffer));
+    setDb(loadedDb);
+    setDbMode('sqlite');
+    setDbFileName(file.name);
+    // Simpan ke localStorage agar persist
+    localStorage.setItem('sqliteDb', JSON.stringify(Array.from(new Uint8Array(arrayBuffer))));
+  };
+
+  // Handle export SQLite file
+  const handleDbExport = () => {
+    if (!db) return;
+    const data = db.export();
+    const blob = new Blob([data], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = dbFileName || 'palugada-db.sqlite';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   // Handlers untuk Jenis Pekerjaan
   const handleAddJenis = () => {
@@ -231,6 +288,27 @@ function Konfigurasi() {
       </header>
 
       <div className="konfigurasi-content">
+        {/* Database SQLite Section */}
+        <section className="db-section">
+          <h2>Database (SQLite)</h2>
+          <div className="db-status-row">
+            <span>Status: <b>{dbMode === 'sqlite' ? 'Menggunakan file database SQLite' : 'Menggunakan localStorage browser'}</b></span>
+          </div>
+          <div className="db-actions-row">
+            <label className="db-upload-label">
+              <Upload size={18} style={{marginRight: 6}} />
+              <span>Load/Import file SQLite</span>
+              <input type="file" accept=".sqlite,.db,.sqlite3,application/octet-stream" style={{display:'none'}} onChange={handleDbUpload} />
+            </label>
+            <button className="db-export-btn" onClick={handleDbExport} disabled={!db} style={{marginLeft: 12}}>
+              <Save size={16} style={{marginRight: 4}} /> Export/Download DB
+            </button>
+          </div>
+          <div className="db-filename-row">
+            {dbFileName && <span>File aktif: <b>{dbFileName}</b></span>}
+          </div>
+        </section>
+
         {/* Logo Aplikasi */}
         <div className="config-section">
           <div className="section-header">

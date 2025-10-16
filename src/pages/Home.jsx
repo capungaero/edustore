@@ -298,97 +298,42 @@ function Home() {
           </div>
         </div>
 
-        {/* Statistics Panel - Grid 3x3 */}
+        {/* Statistics Panel */}
         <div className="statistics-panel">
-          {/* Order Bulan Ini & Keuangan */}
-          <div className="stat-box">
+          {/* Combined Order & Finance Stats */}
+          <div className="stat-box combined-stats">
             <div className="stat-header">
-              <h3>Order & Keuangan</h3>
+              <h3>Laporan</h3>
               <Calendar size={20} color="#4F46E5" />
             </div>
-            <div className="stat-content">
+            
+            <div className="combined-stats-content">
+              {/* Order Count */}
               <div className="stat-item">
-                <div className="stat-label">Order Bulan Ini</div>
-                <div className="stat-value-small">{getCurrentMonthOrders().length} pesanan</div>
+                <div className="stat-label-small">Order Bulan Ini</div>
+                <div className="stat-value-medium">{getCurrentMonthOrders().length}</div>
               </div>
+
+              {/* Divider */}
+              <div className="stats-divider"></div>
+
+              {/* Income */}
               <div className="stat-item">
-                <div className="stat-label">
-                  <TrendingUp size={16} color="#10b981" style={{ display: 'inline', marginRight: '4px' }} />
-                  Pemasukan
+                <div className="stat-icon-label">
+                  <TrendingUp size={18} color="#10b981" />
+                  <span className="stat-label-small">Pemasukan</span>
                 </div>
-                <div className="stat-value-small income">{formatCurrency(getTotalIncome())}</div>
+                <div className="stat-value-medium income">{formatCurrency(getTotalIncome())}</div>
               </div>
+
+              {/* Expense */}
               <div className="stat-item">
-                <div className="stat-label">
-                  <TrendingDown size={16} color="#ef4444" style={{ display: 'inline', marginRight: '4px' }} />
-                  Pengeluaran
+                <div className="stat-icon-label">
+                  <TrendingDown size={18} color="#ef4444" />
+                  <span className="stat-label-small">Pengeluaran</span>
                 </div>
-                <div className="stat-value-small expense">{formatCurrency(getTotalExpenses())}</div>
+                <div className="stat-value-medium expense">{formatCurrency(getTotalExpenses())}</div>
               </div>
-            </div>
-          </div>
-
-          {/* Placeholder for future stats */}
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 2</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
-            </div>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 3</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
-            </div>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 4</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
-            </div>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 5</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
-            </div>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 6</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
-            </div>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 7</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
-            </div>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-header">
-              <h3>Statistik 8</h3>
-            </div>
-            <div className="stat-content">
-              <div className="stat-label">Coming Soon</div>
             </div>
           </div>
 

@@ -52,7 +52,7 @@
 .home-content {
   display: grid;
   grid-template-columns: 1fr 400px;
-  gap: 2rem;
+  gap: 1.1rem;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -512,7 +512,7 @@
   background: white;
   border-radius: 20px;
   padding: 2rem;
-  margin-top: 1rem;
+  margin-top: 0.3rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   max-width: 1400px;
   margin-left: auto;

@@ -300,85 +300,78 @@ function Home() {
 
         {/* Statistics Panel */}
         <div className="statistics-panel">
-          {/* Combined Order & Finance Stats */}
+          {/* Laporan & Reminder dalam satu panel */}
           <div className="stat-box combined-stats">
-            <div className="stat-header">
-              <h3>Laporan</h3>
+            <div className="stat-header" style={{ marginBottom: '0.5rem' }}>
+              <h3>Laporan & Reminder</h3>
               <Calendar size={20} color="#4F46E5" />
             </div>
-            
-            <div className="combined-stats-content">
+            <div className="combined-stats-content" style={{ gap: '0.5rem' }}>
               {/* Order Count */}
               <div className="stat-item">
                 <div className="stat-label-small">Order Bulan Ini</div>
                 <div className="stat-value-medium">{getCurrentMonthOrders().length}</div>
               </div>
-
-              {/* Divider */}
-              <div className="stats-divider"></div>
-
               {/* Income */}
               <div className="stat-item">
                 <div className="stat-icon-label">
-                  <TrendingUp size={18} color="#10b981" />
+                  <TrendingUp size={16} color="#10b981" />
                   <span className="stat-label-small">Pemasukan</span>
                 </div>
                 <div className="stat-value-medium income">{formatCurrency(getTotalIncome())}</div>
               </div>
-
               {/* Expense */}
               <div className="stat-item">
                 <div className="stat-icon-label">
-                  <TrendingDown size={18} color="#ef4444" />
+                  <TrendingDown size={16} color="#ef4444" />
                   <span className="stat-label-small">Pengeluaran</span>
                 </div>
                 <div className="stat-value-medium expense">{formatCurrency(getTotalExpenses())}</div>
               </div>
-            </div>
-          </div>
-
-          {/* Reminders */}
-          <div className="stat-box reminders-box">
-            <div className="stat-header">
-              <h3>Reminder</h3>
-              <button className="add-reminder-btn" onClick={() => setShowReminderForm(true)}>
-                <Plus size={18} />
-              </button>
-            </div>
-            
-            {showReminderForm && (
-              <div className="reminder-form">
-                <input
-                  type="text"
-                  placeholder="Tulis reminder..."
-                  value={newReminder}
-                  onChange={(e) => setNewReminder(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddReminder()}
-                  autoFocus
-                />
-                <div className="reminder-form-actions">
-                  <button onClick={handleAddReminder} className="save-btn">Simpan</button>
-                  <button onClick={() => { setShowReminderForm(false); setNewReminder(''); }} className="cancel-btn">Batal</button>
+              {/* Divider */}
+              <div className="stats-divider"></div>
+              {/* Reminder Section */}
+              <div className="reminder-panel-inside">
+                <div className="reminder-header-row">
+                  <span className="stat-label-small">Reminder</span>
+                  <button className="add-reminder-btn" onClick={() => setShowReminderForm(true)}>
+                    <Plus size={16} />
+                  </button>
+                </div>
+                {showReminderForm && (
+                  <div className="reminder-form">
+                    <input
+                      type="text"
+                      placeholder="Tulis reminder..."
+                      value={newReminder}
+                      onChange={(e) => setNewReminder(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddReminder()}
+                      autoFocus
+                    />
+                    <div className="reminder-form-actions">
+                      <button onClick={handleAddReminder} className="save-btn">Simpan</button>
+                      <button onClick={() => { setShowReminderForm(false); setNewReminder(''); }} className="cancel-btn">Batal</button>
+                    </div>
+                  </div>
+                )}
+                <div className="reminders-list" style={{ marginTop: 4 }}>
+                  {reminders.length === 0 ? (
+                    <p className="no-data">Belum ada reminder</p>
+                  ) : (
+                    reminders.map(reminder => (
+                      <div key={reminder.id} className="reminder-item">
+                        <div className="reminder-text">{reminder.text}</div>
+                        <button 
+                          className="delete-reminder-btn" 
+                          onClick={() => handleDeleteReminder(reminder.id)}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
-            )}
-
-            <div className="reminders-list">
-              {reminders.length === 0 ? (
-                <p className="no-data">Belum ada reminder</p>
-              ) : (
-                reminders.map(reminder => (
-                  <div key={reminder.id} className="reminder-item">
-                    <div className="reminder-text">{reminder.text}</div>
-                    <button 
-                      className="delete-reminder-btn" 
-                      onClick={() => handleDeleteReminder(reminder.id)}
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))
-              )}
             </div>
           </div>
         </div>

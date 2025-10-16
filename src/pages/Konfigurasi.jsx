@@ -32,6 +32,9 @@ function Konfigurasi() {
   const [dbFileName, setDbFileName] = useState('');
   const [sqlJsLoaded, setSqlJsLoaded] = useState(false);
 
+  // Ganti path WASM ke public agar tidak 404
+  const SQL_WASM_PATH = '/sql-wasm.wasm';
+
   // Load data dari localStorage
   useEffect(() => {
     // Load jenis pekerjaan
@@ -95,7 +98,7 @@ function Konfigurasi() {
 
   // Load sql.js
   useEffect(() => {
-    initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` })
+    initSqlJs({ locateFile: file => SQL_WASM_PATH })
       .then(SQL => {
         setSqlJsLoaded(true);
         // Try to load DB from localStorage (if any)
@@ -121,7 +124,7 @@ function Konfigurasi() {
     const file = e.target.files[0];
     if (!file) return;
     const arrayBuffer = await file.arrayBuffer();
-    const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
+    const SQL = await initSqlJs({ locateFile: file => SQL_WASM_PATH });
     const loadedDb = new SQL.Database(new Uint8Array(arrayBuffer));
     setDb(loadedDb);
     setDbMode('sqlite');

@@ -124,6 +124,34 @@ function Home() {
     return date.toDateString() === today.toDateString();
   };
 
+  // Get deadlines for a specific date
+  const getDeadlinesForDate = (date) => {
+    const dateKey = getDateKey(date);
+    return orders.filter(order => {
+      const deadlineKey = getDateKey(new Date(order.deadline));
+      return deadlineKey === dateKey;
+    });
+  };
+
+  // Get deadline color based on days until deadline (gradient from yellow to red)
+  const getDeadlineColor = (deadlineDate) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const deadline = new Date(deadlineDate);
+    deadline.setHours(0, 0, 0, 0);
+    
+    const daysUntil = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+    
+    // 7+ hari = kuning (#fef08a)
+    // 0 hari = merah (#ef4444)
+    // Gradient: kuning → orange → merah
+    if (daysUntil >= 7) return '#fef08a'; // kuning muda
+    if (daysUntil >= 5) return '#fcd34d'; // kuning
+    if (daysUntil >= 3) return '#fb923c'; // orange
+    if (daysUntil >= 1) return '#f97316'; // orange tua
+    return '#ef4444'; // merah (hari ini atau lewat)
+  };
+
   const modules = [
     {
       id: 'order',
@@ -282,34 +310,6 @@ function Home() {
             <div className="stat-label">Total Pesanan</div>
           </div>
 
-          {/* Upcoming Deadlines */}
-          <div className="stat-box deadlines-box">
-            <div className="stat-header">
-              <h3>Deadline Terdekat</h3>
-              <Bell size={20} color="#DC2626" />
-            </div>
-            <div className="deadlines-list">
-              {getUpcomingDeadlines().length === 0 ? (
-                <p className="no-data">Tidak ada deadline</p>
-              ) : (
-                getUpcomingDeadlines().map(order => {
-                  const daysUntil = getDaysUntil(order.deadline);
-                  return (
-                    <div key={order.id} className="deadline-item">
-                      <div className="deadline-info">
-                        <div className="deadline-name">{order.namaPemesan || order.id}</div>
-                        <div className="deadline-work">{order.pekerjaan}</div>
-                      </div>
-                      <div className={`deadline-days ${daysUntil <= 2 ? 'urgent' : ''}`}>
-                        {daysUntil === 0 ? 'Hari ini' : daysUntil === 1 ? 'Besok' : `${daysUntil} hari`}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-
           {/* Income & Expenses */}
           <div className="finance-boxes">
             <div className="stat-box income-box">
@@ -400,6 +400,7 @@ function Home() {
           {getWeekDays().map((date, index) => {
             const dateKey = getDateKey(date);
             const dayAgendas = agendas[dateKey] || [];
+            const dayDeadlines = getDeadlinesForDate(date);
             const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             
             return (
@@ -416,6 +417,23 @@ function Home() {
                 </div>
 
                 <div className="day-content">
+                  {/* Deadlines */}
+                  {dayDeadlines.length > 0 && (
+                    <div className="deadlines-section">
+                      {dayDeadlines.map(order => (
+                        <div 
+                          key={order.id} 
+                          className="deadline-badge"
+                          style={{ backgroundColor: getDeadlineColor(order.deadline) }}
+                        >
+                          <div className="deadline-title">{order.namaPemesan || 'Order'}</div>
+                          <div className="deadline-desc">{order.pekerjaan}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Agendas */}
                   <div className="agendas-list">
                     {dayAgendas.map(agenda => (
                       <div key={agenda.id} className="agenda-item">
